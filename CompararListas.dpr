@@ -2,8 +2,10 @@ program CompararListas;
 
 uses
   Vcl.Forms,
-  CompararLista in 'CompararLista.pas' {FrmPrincipal},
-  Resultado in 'Resultado.pas' {FrmResultado};
+  CompararLista in 'view\CompararLista.pas' {FrmPrincipal},
+  Resultado in 'view\Resultado.pas' {FrmResultado},
+  UntCompararListaController in 'controller\UntCompararListaController.pas',
+  UntCompararListaResult in 'controller\UntCompararListaResult.pas';
 
 {$R *.res}
 
