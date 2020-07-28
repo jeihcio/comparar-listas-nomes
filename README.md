@@ -1,2 +1,2 @@
-# comparar-listas-nomes
+# Verificar nomes
 Verificar quais nomes estão em uma determinada lista
