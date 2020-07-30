@@ -54,7 +54,7 @@ begin
    Result := TStringList.Create();
    for index := 0 to ALista.Count - 1 do
    begin
-      item := UpperCase(Trim(ALista[index]));
+      item := UpperCase(FStrings.removerEspacos(ALista[index]));
       Result.Add(item);
    end;
 end;
