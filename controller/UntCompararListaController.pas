@@ -75,7 +75,8 @@ var
    listaParcialSemEspacoEMaiusculo, listaCompletaSemEspacoEMaiusculo,
      lista: TStringList;
 
-   resultadoComparacaoListas: TCompararDuasListaResult;
+   comparacaoListaParcialCompleta, comparacaoListaCompletaParcial
+     : TCompararDuasListaResult;
 begin
    Result := TCompararListaResult.Create();
 
@@ -85,36 +86,37 @@ begin
    listaParcialSemEspacoEMaiusculo :=
      FListas.getListaComItensSemEspacosEMaiusculo(AListaParcial);
 
-   FBarraProgresso.setTamanhoTotalBarraProgresso(AProgressBar,
-     AListaParcial.Count);
-
    try
-      resultadoComparacaoListas :=
+      FBarraProgresso.setTamanhoTotalBarraProgresso(AProgressBar,
+        AListaParcial.Count);
+
+      comparacaoListaParcialCompleta :=
         FListas.verificarSeItensDeUmaListaContemEmOutra(AProgressBar,
         AListaParcial, listaCompletaSemEspacoEMaiusculo);
 
       try
          Result.ListaNomesContemListaCompleta.AddStrings
-           (resultadoComparacaoListas.ListaNomesContemListaCompleta);
+           (comparacaoListaParcialCompleta.ListaNomesContemListaCompleta);
 
          Result.ListaNomesNaoContemListaCompleta.AddStrings
-           (resultadoComparacaoListas.ListaNomesNaoContemListaCompleta);
-      finally
-         resultadoComparacaoListas.Free;
-      end;
+           (comparacaoListaParcialCompleta.ListaNomesNaoContemListaCompleta);
 
-      FBarraProgresso.limparBarraProgresso(AProgressBar);
-      FBarraProgresso.setTamanhoTotalBarraProgresso(AProgressBar,
-        AListaCompleta.Count);
+         FBarraProgresso.limparBarraProgresso(AProgressBar);
+         FBarraProgresso.setTamanhoTotalBarraProgresso(AProgressBar,
+           AListaCompleta.Count);
 
-      resultadoComparacaoListas :=
-        FListas.verificarSeItensDeUmaListaContemEmOutra(AProgressBar,
-        AListaCompleta, listaParcialSemEspacoEMaiusculo);
-      try
-         Result.ListaNomesNaoContemListaParcial.AddStrings
-           (resultadoComparacaoListas.ListaNomesNaoContemListaCompleta);
+         comparacaoListaCompletaParcial :=
+           FListas.verificarSeItensDeUmaListaContemEmOutra(AProgressBar,
+           AListaCompleta, listaParcialSemEspacoEMaiusculo);
+
+         try
+            Result.ListaNomesNaoContemListaParcial.AddStrings
+              (comparacaoListaCompletaParcial.ListaNomesNaoContemListaCompleta);
+         finally
+            comparacaoListaCompletaParcial.Free;
+         end;
       finally
-         resultadoComparacaoListas.Free;
+         comparacaoListaParcialCompleta.Free;
       end;
    finally
       listaCompletaSemEspacoEMaiusculo.Free;
