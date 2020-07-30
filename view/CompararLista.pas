@@ -58,7 +58,8 @@ begin
       ShowMessage('Finalizado');
 
       FController.ExibirResultado(Resultado.ListaNomesContemListaCompleta,
-        Resultado.ListaNomesNaoContemListaCompleta);
+        Resultado.ListaNomesNaoContemListaCompleta,
+        Resultado.ListaNomesNaoContemListaParcial);
    finally
       Resultado.Free;
    end;

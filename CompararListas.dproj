@@ -82,7 +82,10 @@
             <Form>FrmResultado</Form>
         </DCCReference>
         <DCCReference Include="controller\UntCompararListaController.pas"/>
-        <DCCReference Include="controller\UntCompararListaResult.pas"/>
+        <DCCReference Include="controller\public\UntBarraProgresso.pas"/>
+        <DCCReference Include="controller\public\UntOpStrings.pas"/>
+        <DCCReference Include="model\UntCompararListaResult.pas"/>
+        <DCCReference Include="controller\public\UntOpListas.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

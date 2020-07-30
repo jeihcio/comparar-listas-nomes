@@ -3,24 +3,25 @@ unit UntCompararListaController;
 interface
 
 uses
-   System.Classes, Vcl.ComCtrls, UntCompararListaResult;
+   System.Classes, Vcl.ComCtrls, UntCompararListaResult,
+   UntBarraProgresso, UntOpStrings, UntOpListas;
 
 type
    TCompararListaController = class
    private
-      function RemoveEspacoDuplicados(cNome: String): string;
-      function removerEspacos(AValue: String): String;
-      function isNomesIguais(ANome1, ANome2: String): Boolean;
-
-      procedure incBarraProgresso(AProgressBar: TProgressBar);
-      procedure setTamanhoTotalBarraProgresso(AProgressBar: TProgressBar;
-        ATamanhoTotal: Integer);
+      FBarraProgresso: TBarraProgresso;
+      FStrings: TOpStrings;
+      FListas: TOpLista;
    public
+      constructor Create(); reintroduce;
+      destructor Destroy(); override;
+
       function verficarListas(AProgressBar: TProgressBar;
         AListaParcial, AListaCompleta: TStrings): TCompararListaResult;
 
       procedure ExibirResultado(AListaNomesContemListaCompleta,
-        AListaNomesNaoContemListaCompleta: TStringList);
+        AListaNomesNaoContemListaCompleta, AListaNomesNaoContemListaParcial
+        : TStringList);
    end;
 
 implementation
@@ -30,17 +31,37 @@ uses
 
 { TCompararListaController }
 
+constructor TCompararListaController.Create;
+begin
+   FBarraProgresso := TBarraProgresso.Create();
+   FStrings := TOpStrings.Create();
+   FListas := TOpLista.Create();
+end;
+
+destructor TCompararListaController.Destroy;
+begin
+   FBarraProgresso.Free;
+   FStrings.Free;
+   FListas.Free;
+   inherited;
+end;
+
 procedure TCompararListaController.ExibirResultado
-  (AListaNomesContemListaCompleta, AListaNomesNaoContemListaCompleta
-  : TStringList);
+  (AListaNomesContemListaCompleta, AListaNomesNaoContemListaCompleta,
+  AListaNomesNaoContemListaParcial: TStringList);
 var
    formulario: TFrmResultado;
 begin
    formulario := TFrmResultado.Create(nil);
    try
-      formulario.listaParcial.Lines.AddStrings(AListaNomesContemListaCompleta);
-      formulario.listaCompleta.Lines.AddStrings
+      formulario.listaParcialContemListaCompleta.Lines.AddStrings
+        (AListaNomesContemListaCompleta);
+
+      formulario.listaParcialNaoContemListaCompleta.Lines.AddStrings
         (AListaNomesNaoContemListaCompleta);
+
+      formulario.listaCompletaNaoContemListaParcial.Lines.AddStrings
+        (AListaNomesNaoContemListaParcial);
 
       formulario.ShowModal();
    finally
@@ -48,71 +69,42 @@ begin
    end;
 end;
 
-procedure TCompararListaController.incBarraProgresso(AProgressBar
-  : TProgressBar);
-begin
-   AProgressBar.Position := AProgressBar.Position + 1;
-end;
-
-function TCompararListaController.isNomesIguais(ANome1, ANome2: String)
-  : Boolean;
-begin
-   result := (UpperCase(ANome1) = UpperCase(ANome2));
-end;
-
-function TCompararListaController.RemoveEspacoDuplicados(cNome: String): string;
-Const
-   cDouble = '  ';
-   cOne = ' ';
-Begin
-   result := cNome;
-   While Pos(cDouble, result) > 0 Do
-      result := StringReplace(result, cDouble, cOne, [rfReplaceAll]);
-end;
-
-function TCompararListaController.removerEspacos(AValue: String): String;
-begin
-   result := RemoveEspacoDuplicados(Trim(AValue));
-end;
-
-procedure TCompararListaController.setTamanhoTotalBarraProgresso
-  (AProgressBar: TProgressBar; ATamanhoTotal: Integer);
-begin
-   AProgressBar.Max := ATamanhoTotal;
-end;
-
 function TCompararListaController.verficarListas(AProgressBar: TProgressBar;
   AListaParcial, AListaCompleta: TStrings): TCompararListaResult;
 var
-   indexListaParcial, indexListaCompleta: Integer;
-   nomeListaParcial, nomeListaCompleta: String;
-   isContemNasDuasListas: Boolean;
+   indexListaParcial: Integer;
+   nomeListaParcial: String;
+
+   listaParcialSemEspacoEMaiusculo, listaCompletaSemEspacoEMaiusculo,
+     lista: TStringList;
 begin
-   result := TCompararListaResult.Create();
-   setTamanhoTotalBarraProgresso(AProgressBar, AListaParcial.Count);
+   Result := TCompararListaResult.Create();
+   FBarraProgresso.setTamanhoTotalBarraProgresso(AProgressBar,
+     AListaParcial.Count);
 
-   for indexListaParcial := 0 to AListaParcial.Count - 1 do
-   begin
-      nomeListaParcial := removerEspacos(AListaParcial[indexListaParcial]);
-      isContemNasDuasListas := false;
+   listaCompletaSemEspacoEMaiusculo :=
+     FListas.getListaComItensSemEspacosEMaiusculo(AListaCompleta);
 
-      for indexListaCompleta := 0 to AListaCompleta.Count - 1 do
+   listaParcialSemEspacoEMaiusculo :=
+     FListas.getListaComItensSemEspacosEMaiusculo(AListaParcial);
+
+   try
+      for indexListaParcial := 0 to AListaParcial.Count - 1 do
       begin
-         nomeListaCompleta :=
-           removerEspacos(AListaCompleta[indexListaCompleta]);
+         nomeListaParcial := FStrings.removerEspacos
+           (AListaParcial[indexListaParcial]);
 
-         if isNomesIguais(nomeListaParcial, nomeListaCompleta) then
-         begin
-            result.ListaNomesContemListaCompleta.Add(nomeListaParcial);
-            isContemNasDuasListas := true;
-            break;
-         end;
+         if FListas.localizarItemLista(listaCompletaSemEspacoEMaiusculo,
+           nomeListaParcial) then
+            Result.ListaNomesContemListaCompleta.Add(nomeListaParcial)
+         else
+            Result.ListaNomesNaoContemListaCompleta.Add(nomeListaParcial);
+
+         FBarraProgresso.incBarraProgresso(AProgressBar);
       end;
-
-      if (not isContemNasDuasListas) then
-         result.ListaNomesNaoContemListaCompleta.Add(nomeListaParcial);
-
-      incBarraProgresso(AProgressBar);
+   finally
+      listaCompletaSemEspacoEMaiusculo.Free;
+      listaParcialSemEspacoEMaiusculo.Free;
    end;
 end;
 

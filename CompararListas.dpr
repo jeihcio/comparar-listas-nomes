@@ -5,7 +5,10 @@ uses
   CompararLista in 'view\CompararLista.pas' {FrmPrincipal},
   Resultado in 'view\Resultado.pas' {FrmResultado},
   UntCompararListaController in 'controller\UntCompararListaController.pas',
-  UntCompararListaResult in 'controller\UntCompararListaResult.pas';
+  UntBarraProgresso in 'controller\public\UntBarraProgresso.pas',
+  UntOpStrings in 'controller\public\UntOpStrings.pas',
+  UntCompararListaResult in 'model\UntCompararListaResult.pas',
+  UntOpListas in 'controller\public\UntOpListas.pas';
 
 {$R *.res}
 

@@ -8,8 +8,9 @@ uses
 type
    TCompararListaResult = class
    private
-      FListaNomesContemListaCompleta, FListaNomesNaoContemListaCompleta
-        : TStringList;
+      FListaNomesContemListaCompleta: TStringList;
+      FListaNomesNaoContemListaCompleta: TStringList;
+      FListaNomesNaoContemListaParcial: TStringList;
    public
       constructor Create(); reintroduce;
       destructor Destroy(); override;
@@ -19,6 +20,9 @@ type
 
       property ListaNomesNaoContemListaCompleta: TStringList
         read FListaNomesNaoContemListaCompleta;
+
+      property ListaNomesNaoContemListaParcial: TStringList
+        read FListaNomesNaoContemListaParcial;
    end;
 
 implementation
@@ -29,12 +33,14 @@ constructor TCompararListaResult.Create;
 begin
    FListaNomesContemListaCompleta := TStringList.Create();
    FListaNomesNaoContemListaCompleta := TStringList.Create();
+   FListaNomesNaoContemListaParcial := TStringList.Create();
 end;
 
 destructor TCompararListaResult.Destroy;
 begin
    FListaNomesContemListaCompleta.Free;
    FListaNomesNaoContemListaCompleta.Free;
+   FListaNomesNaoContemListaParcial.Free;
    inherited;
 end;
 
