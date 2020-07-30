@@ -11,19 +11,18 @@ type
    private
       FBarraProgresso: TBarraProgresso;
       FStrings: TOpStrings;
+   private
+      function getListaComItensSemEspacosEMaiusculo(ALista: TStrings)
+        : TStringList;
    public
       constructor Create(); reintroduce;
       destructor Destroy(); override;
 
-      function getListaComItensSemEspacosEMaiusculo(ALista: TStrings)
-        : TStringList;
-
-      function localizarItemLista(AListaComItensSemEspacoEMaiusculos
-        : TStrings; AValue: String): Boolean;
+      function localizarItemLista(AListaComItensSemEspacoEMaiusculos: TStrings;
+        AValue: String): Boolean;
 
       function verificarSeItensDeUmaListaContemEmOutra
-        (AProgressBar: TProgressBar;
-        AListaParcial, AListaCompletaSemEspacoEMaiusculo: TStrings)
+        (AProgressBar: TProgressBar; AListaParcial, AListaCompleta: TStrings)
         : TCompararDuasListaResult;
    end;
 
@@ -67,26 +66,33 @@ begin
 end;
 
 function TOpLista.verificarSeItensDeUmaListaContemEmOutra
-  (AProgressBar: TProgressBar; AListaParcial, AListaCompletaSemEspacoEMaiusculo
-  : TStrings): TCompararDuasListaResult;
+  (AProgressBar: TProgressBar; AListaParcial, AListaCompleta: TStrings)
+  : TCompararDuasListaResult;
 var
    indexListaParcial: Integer;
    nomeListaParcial: String;
+   listaCompletaSemEspacoEMaiusculo, lista: TStringList;
 begin
    Result := TCompararDuasListaResult.Create();
+   listaCompletaSemEspacoEMaiusculo := getListaComItensSemEspacosEMaiusculo
+     (AListaCompleta);
 
-   for indexListaParcial := 0 to AListaParcial.Count - 1 do
-   begin
-      nomeListaParcial := FStrings.removerEspacos
-        (AListaParcial[indexListaParcial]);
+   try
+      for indexListaParcial := 0 to AListaParcial.Count - 1 do
+      begin
+         nomeListaParcial := FStrings.removerEspacos
+           (AListaParcial[indexListaParcial]);
 
-      if localizarItemLista(AListaCompletaSemEspacoEMaiusculo, nomeListaParcial)
-      then
-         Result.ListaNomesContemListaCompleta.Add(nomeListaParcial)
-      else
-         Result.ListaNomesNaoContemListaCompleta.Add(nomeListaParcial);
+         if localizarItemLista(listaCompletaSemEspacoEMaiusculo,
+           nomeListaParcial) then
+            Result.ListaNomesContemListaCompleta.Add(nomeListaParcial)
+         else
+            Result.ListaNomesNaoContemListaCompleta.Add(nomeListaParcial);
 
-      FBarraProgresso.incBarraProgresso(AProgressBar);
+         FBarraProgresso.incBarraProgresso(AProgressBar);
+      end;
+   finally
+      listaCompletaSemEspacoEMaiusculo.Free;
    end;
 end;
 

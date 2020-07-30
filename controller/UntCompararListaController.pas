@@ -72,55 +72,33 @@ end;
 function TCompararListaController.verficarListas(AProgressBar: TProgressBar;
   AListaParcial, AListaCompleta: TStrings): TCompararListaResult;
 var
-   listaParcialSemEspacoEMaiusculo, listaCompletaSemEspacoEMaiusculo,
-     lista: TStringList;
-
-   comparacaoListaParcialCompleta, comparacaoListaCompletaParcial
+   comparacaoListaParcialComCompleta, comparacaoListaCompletaComParcial
      : TCompararDuasListaResult;
 begin
    Result := TCompararListaResult.Create();
+   FBarraProgresso.setTamanhoTotalBarraProgresso(AProgressBar,
+     [AListaParcial.Count, AListaCompleta.Count]);
 
-   listaCompletaSemEspacoEMaiusculo :=
-     FListas.getListaComItensSemEspacosEMaiusculo(AListaCompleta);
+   comparacaoListaParcialComCompleta :=
+     FListas.verificarSeItensDeUmaListaContemEmOutra(AProgressBar,
+     AListaParcial, AListaCompleta);
 
-   listaParcialSemEspacoEMaiusculo :=
-     FListas.getListaComItensSemEspacosEMaiusculo(AListaParcial);
+   comparacaoListaCompletaComParcial :=
+     FListas.verificarSeItensDeUmaListaContemEmOutra(AProgressBar,
+     AListaCompleta, AListaParcial);
 
    try
-      FBarraProgresso.setTamanhoTotalBarraProgresso(AProgressBar,
-        AListaParcial.Count);
+      Result.ListaNomesContemListaCompleta.AddStrings
+        (comparacaoListaParcialComCompleta.ListaNomesContemListaCompleta);
 
-      comparacaoListaParcialCompleta :=
-        FListas.verificarSeItensDeUmaListaContemEmOutra(AProgressBar,
-        AListaParcial, listaCompletaSemEspacoEMaiusculo);
+      Result.ListaNomesNaoContemListaCompleta.AddStrings
+        (comparacaoListaParcialComCompleta.ListaNomesNaoContemListaCompleta);
 
-      try
-         Result.ListaNomesContemListaCompleta.AddStrings
-           (comparacaoListaParcialCompleta.ListaNomesContemListaCompleta);
-
-         Result.ListaNomesNaoContemListaCompleta.AddStrings
-           (comparacaoListaParcialCompleta.ListaNomesNaoContemListaCompleta);
-
-         FBarraProgresso.limparBarraProgresso(AProgressBar);
-         FBarraProgresso.setTamanhoTotalBarraProgresso(AProgressBar,
-           AListaCompleta.Count);
-
-         comparacaoListaCompletaParcial :=
-           FListas.verificarSeItensDeUmaListaContemEmOutra(AProgressBar,
-           AListaCompleta, listaParcialSemEspacoEMaiusculo);
-
-         try
-            Result.ListaNomesNaoContemListaParcial.AddStrings
-              (comparacaoListaCompletaParcial.ListaNomesNaoContemListaCompleta);
-         finally
-            comparacaoListaCompletaParcial.Free;
-         end;
-      finally
-         comparacaoListaParcialCompleta.Free;
-      end;
+      Result.ListaNomesNaoContemListaParcial.AddStrings
+        (comparacaoListaCompletaComParcial.ListaNomesNaoContemListaCompleta);
    finally
-      listaCompletaSemEspacoEMaiusculo.Free;
-      listaParcialSemEspacoEMaiusculo.Free;
+      comparacaoListaCompletaComParcial.Free;
+      comparacaoListaParcialComCompleta.Free;
    end;
 end;
 
