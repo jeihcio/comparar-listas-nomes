@@ -9,10 +9,12 @@ uses
 
 type
    TFrmResultado = class(TForm)
-      listaParcial: TMemo;
+    listaParcialContemListaCompleta: TMemo;
       lblprimeira: TLabel;
       Label1: TLabel;
-      listaCompleta: TMemo;
+    listaParcialNaoContemListaCompleta: TMemo;
+    Label2: TLabel;
+    listaCompletaNaoContemListaParcial: TMemo;
    private
    public
    end;
