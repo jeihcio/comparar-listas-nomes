@@ -8,7 +8,8 @@ uses
   UntBarraProgresso in 'controller\public\UntBarraProgresso.pas',
   UntOpStrings in 'controller\public\UntOpStrings.pas',
   UntCompararListaResult in 'model\UntCompararListaResult.pas',
-  UntOpListas in 'controller\public\UntOpListas.pas';
+  UntOpListas in 'controller\public\UntOpListas.pas',
+  UntCompararDuasListaResult in 'model\UntCompararDuasListaResult.pas';
 
 {$R *.res}
 

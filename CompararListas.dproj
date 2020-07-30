@@ -86,6 +86,7 @@
         <DCCReference Include="controller\public\UntOpStrings.pas"/>
         <DCCReference Include="model\UntCompararListaResult.pas"/>
         <DCCReference Include="controller\public\UntOpListas.pas"/>
+        <DCCReference Include="model\UntCompararDuasListaResult.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
