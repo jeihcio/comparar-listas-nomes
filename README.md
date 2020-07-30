@@ -14,6 +14,7 @@ Verificar quais nomes de uma determinada lista parcial estão em uma lista compl
 #### Resultado:
 
 | Nomes da lista parcial que contém na lista completa | Nomes da lista parcial que NÃO contém na lista completa | Nome da lista completa que NÃO contém na lista parcial |
-| --- | --- | --- | Fabrício |
-| Carlos | Tiago | Diego |
-| Gabriel | | Lucas |
+| --- | --- | --- |
+| Carlos | Tiago | Fabrício |
+| Gabriel | | Diego |
+| | | Lucas |
