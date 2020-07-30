@@ -11,17 +11,48 @@ type
       function RemoveEspacoDuplicados(cNome: String): string;
       function removerEspacos(AValue: String): String;
       function isNomesIguais(ANome1, ANome2: String): Boolean;
+
+      procedure incBarraProgresso(AProgressBar: TProgressBar);
+      procedure setTamanhoTotalBarraProgresso(AProgressBar: TProgressBar;
+        ATamanhoTotal: Integer);
    public
       function verficarListas(AProgressBar: TProgressBar;
         AListaParcial, AListaCompleta: TStrings): TCompararListaResult;
+
+      procedure ExibirResultado(AListaNomesContemListaCompleta,
+        AListaNomesNaoContemListaCompleta: TStringList);
    end;
 
 implementation
 
 uses
-   System.SysUtils;
+   System.SysUtils, Resultado;
 
 { TCompararListaController }
+
+procedure TCompararListaController.ExibirResultado
+  (AListaNomesContemListaCompleta, AListaNomesNaoContemListaCompleta
+  : TStringList);
+var
+   formulario: TFrmResultado;
+begin
+   formulario := TFrmResultado.Create(nil);
+   try
+      formulario.listaParcial.Lines.AddStrings(AListaNomesContemListaCompleta);
+      formulario.listaCompleta.Lines.AddStrings
+        (AListaNomesNaoContemListaCompleta);
+
+      formulario.ShowModal();
+   finally
+      formulario.Free;
+   end;
+end;
+
+procedure TCompararListaController.incBarraProgresso(AProgressBar
+  : TProgressBar);
+begin
+   AProgressBar.Position := AProgressBar.Position + 1;
+end;
 
 function TCompararListaController.isNomesIguais(ANome1, ANome2: String)
   : Boolean;
@@ -44,6 +75,12 @@ begin
    result := RemoveEspacoDuplicados(Trim(AValue));
 end;
 
+procedure TCompararListaController.setTamanhoTotalBarraProgresso
+  (AProgressBar: TProgressBar; ATamanhoTotal: Integer);
+begin
+   AProgressBar.Max := ATamanhoTotal;
+end;
+
 function TCompararListaController.verficarListas(AProgressBar: TProgressBar;
   AListaParcial, AListaCompleta: TStrings): TCompararListaResult;
 var
@@ -52,8 +89,8 @@ var
    isContemNasDuasListas: Boolean;
 begin
    result := TCompararListaResult.Create();
+   setTamanhoTotalBarraProgresso(AProgressBar, AListaParcial.Count);
 
-   AProgressBar.Max := AListaParcial.Count;
    for indexListaParcial := 0 to AListaParcial.Count - 1 do
    begin
       nomeListaParcial := removerEspacos(AListaParcial[indexListaParcial]);
@@ -75,10 +112,8 @@ begin
       if (not isContemNasDuasListas) then
          result.ListaNomesNaoContemListaCompleta.Add(nomeListaParcial);
 
-      AProgressBar.Position := AProgressBar.Position + 1;
+      incBarraProgresso(AProgressBar);
    end;
-
-   AProgressBar.Position := AProgressBar.Max;
 end;
 
 end.

@@ -15,12 +15,10 @@ type
       destructor Destroy(); override;
 
       property ListaNomesContemListaCompleta: TStringList
-        read FListaNomesContemListaCompleta
-        write FListaNomesContemListaCompleta;
+        read FListaNomesContemListaCompleta;
 
       property ListaNomesNaoContemListaCompleta: TStringList
-        read FListaNomesNaoContemListaCompleta
-        write FListaNomesNaoContemListaCompleta;
+        read FListaNomesNaoContemListaCompleta;
    end;
 
 implementation

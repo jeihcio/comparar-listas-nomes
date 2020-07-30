@@ -25,8 +25,6 @@ type
       FController: TCompararListaController;
       procedure limparCampos();
       procedure LimparContador();
-      procedure ExibirResultado(AListaNomesContemListaCompleta,
-        AListaNomesNaoContemListaCompleta: TStringList);
    public
    end;
 
@@ -37,7 +35,7 @@ implementation
 
 {$R *.dfm}
 
-uses Resultado, UntCompararListaResult;
+uses UntCompararListaResult;
 
 procedure TFrmPrincipal.btnLimparClick(Sender: TObject);
 begin
@@ -59,26 +57,10 @@ begin
       Screen.Cursor := crDefault;
       ShowMessage('Finalizado');
 
-      ExibirResultado(Resultado.ListaNomesContemListaCompleta,
+      FController.ExibirResultado(Resultado.ListaNomesContemListaCompleta,
         Resultado.ListaNomesNaoContemListaCompleta);
    finally
       Resultado.Free;
-   end;
-end;
-
-procedure TFrmPrincipal.ExibirResultado(AListaNomesContemListaCompleta,
-  AListaNomesNaoContemListaCompleta: TStringList);
-var
-   formulario: TFrmResultado;
-begin
-   formulario := TFrmResultado.Create(nil);
-   try
-      formulario.listaParcial.Lines := AListaNomesContemListaCompleta;
-      formulario.listaCompleta.Lines := AListaNomesNaoContemListaCompleta;
-
-      formulario.ShowModal();
-   finally
-      formulario.Free;
    end;
 end;
 
