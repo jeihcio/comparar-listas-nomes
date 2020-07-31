@@ -3,7 +3,7 @@ unit UntCompararListaController;
 interface
 
 uses
-   System.Classes, Vcl.ComCtrls, UntCompararListaResult,
+   System.Classes, Vcl.ComCtrls, UntCompararListaResult, Vcl.Controls,
    UntBarraProgresso, UntOpStrings, UntOpListas, UntCompararDuasListaResult;
 
 type
@@ -27,7 +27,7 @@ type
 implementation
 
 uses
-   System.SysUtils, Resultado;
+   System.SysUtils, Resultado, Vcl.Forms;
 
 { TCompararListaController }
 
@@ -54,6 +54,7 @@ var
 begin
    formulario := TFrmResultado.Create(nil);
    try
+      Screen.Cursor := crHourGlass;
       formulario.listaParcialContemListaCompleta.Lines.AddStrings
         (AListaNomesContemListaCompleta);
 
@@ -63,6 +64,7 @@ begin
       formulario.listaCompletaNaoContemListaParcial.Lines.AddStrings
         (AListaNomesNaoContemListaParcial);
 
+      Screen.Cursor := crDefault;
       formulario.ShowModal();
    finally
       formulario.Free;

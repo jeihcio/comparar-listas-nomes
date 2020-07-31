@@ -20,9 +20,13 @@ type
 
 implementation
 
+uses
+  Vcl.Forms;
+
 procedure TBarraProgresso.incBarraProgresso(AProgressBar: TProgressBar);
 begin
    AProgressBar.Position := AProgressBar.Position + 1;
+   application.ProcessMessages();
 end;
 
 procedure TBarraProgresso.limparBarraProgresso(AProgressBar: TProgressBar);
